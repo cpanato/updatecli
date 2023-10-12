@@ -15,26 +15,26 @@ archives:
       - completions/*
       - manpages/*
 
-aurs:
-  - homepage:  https://www.updatecli.io
-    description: A declarative dependency management command line tool.
-    maintainers:
-      - 'Olivier Vernin <olivier at vernin dot me>'
-      - 'Jonathan Neidel <aur at jneidel dot com>'
-    license: 'Apache'
-    private_key: '{{ .Env.AUR_KEY }}'
-    git_url: 'ssh://aur@aur.archlinux.org/updatecli-bin.git'
-    package: |-
-      # bin
-      install -Dm755 "./updatecli" "${pkgdir}/usr/bin/updatecli"
-      # license
-      install -Dm644 "./LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
-      # completions
-      install -Dm644 "./completions/updatecli.bash" "${pkgdir}/usr/share/bash-completion/completions/updatecli"
-      install -Dm644 "./completions/updatecli.zsh" "${pkgdir}/usr/share/zsh/site-functions/_updatecli"
-      install -Dm644 "./completions/updatecli.fish" "${pkgdir}/usr/share/fish/vendor_completions.d/updatecli.fish"
-      # man pages
-      install -Dm644 "./manpages/updatecli.1.gz" "${pkgdir}/usr/share/man/man1/updatecli.1.gz"
+# aurs:
+#   - homepage:  https://www.updatecli.io
+#     description: A declarative dependency management command line tool.
+#     maintainers:
+#       - 'Olivier Vernin <olivier at vernin dot me>'
+#       - 'Jonathan Neidel <aur at jneidel dot com>'
+#     license: 'Apache'
+#     private_key: '{{ .Env.AUR_KEY }}'
+#     git_url: 'ssh://aur@aur.archlinux.org/updatecli-bin.git'
+#     package: |-
+#       # bin
+#       install -Dm755 "./updatecli" "${pkgdir}/usr/bin/updatecli"
+#       # license
+#       install -Dm644 "./LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+#       # completions
+#       install -Dm644 "./completions/updatecli.bash" "${pkgdir}/usr/share/bash-completion/completions/updatecli"
+#       install -Dm644 "./completions/updatecli.zsh" "${pkgdir}/usr/share/zsh/site-functions/_updatecli"
+#       install -Dm644 "./completions/updatecli.fish" "${pkgdir}/usr/share/fish/vendor_completions.d/updatecli.fish"
+#       # man pages
+#       install -Dm644 "./manpages/updatecli.1.gz" "${pkgdir}/usr/share/man/man1/updatecli.1.gz"
 
 before:
   hooks:
@@ -43,25 +43,25 @@ before:
     - ./scripts/completions.sh
     - ./scripts/manpages.sh
 
-brews:
-  - name: updatecli
-    folder: Formula
-    repository:
-      owner: updatecli
-      name: homebrew-updatecli
-      token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
-    commit_msg_template: "Brew formula update for {{ .ProjectName }} version {{ .Tag }}"
-    homepage: "https://updatecli.io/"
-    description: 'Updatecli is a declarative dependency management command line tool.'
-    license: 'Apache-2.0'
-    test: |
-      system "#{bin}/updatecli version"
-    install: |-
-      bin.install "updatecli"
-      bash_completion.install "completions/updatecli.bash" => "updatecli"
-      zsh_completion.install "completions/updatecli.zsh" => "_updatecli"
-      fish_completion.install "completions/updatecli.fish"
-      man1.install "manpages/updatecli.1.gz"
+# brews:
+#   - name: updatecli
+#     folder: Formula
+#     repository:
+#       owner: updatecli
+#       name: homebrew-updatecli
+#       token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
+#     commit_msg_template: "Brew formula update for {{ .ProjectName }} version {{ .Tag }}"
+#     homepage: "https://updatecli.io/"
+#     description: 'Updatecli is a declarative dependency management command line tool.'
+#     license: 'Apache-2.0'
+#     test: |
+#       system "#{bin}/updatecli version"
+#     install: |-
+#       bin.install "updatecli"
+#       bash_completion.install "completions/updatecli.bash" => "updatecli"
+#       zsh_completion.install "completions/updatecli.zsh" => "_updatecli"
+#       fish_completion.install "completions/updatecli.fish"
+#       man1.install "manpages/updatecli.1.gz"
 
 builds:
   - id: updatecli
@@ -90,8 +90,8 @@ checksum:
 
 dockers:
   - image_templates:
-      - 'updatecli/updatecli:{{ .Tag }}-amd64'
-      - 'ghcr.io/updatecli/updatecli:{{ .Tag }}-amd64'
+      # - 'updatecli/updatecli:{{ .Tag }}-amd64'
+      - 'ghcr.io/cpanato/updatecli:{{ .Tag }}-amd64'
     dockerfile: Dockerfile
     use: buildx
     build_flag_templates:
@@ -108,8 +108,8 @@ dockers:
     extra_files:
       - Makefile
   - image_templates:
-      - 'updatecli/updatecli:{{ .Tag }}-arm64'
-      - 'ghcr.io/updatecli/updatecli:{{ .Tag }}-arm64'
+      # - 'updatecli/updatecli:{{ .Tag }}-arm64'
+      - 'ghcr.io/cpanato/updatecli:{{ .Tag }}-arm64'
     dockerfile: Dockerfile
     use: buildx
     build_flag_templates:
@@ -136,22 +136,22 @@ docker_signs:
       - '${artifact}@${digest}'
 
 docker_manifests:
-  - name_template: 'updatecli/updatecli:{{ .Tag }}'
+  # - name_template: 'updatecli/updatecli:{{ .Tag }}'
+  #   image_templates:
+  #     - 'updatecli/updatecli:{{ .Tag }}-amd64'
+  #     - 'updatecli/updatecli:{{ .Tag }}-arm64'
+  - name_template: 'ghcr.io/cpanato/updatecli:{{ .Tag }}'
     image_templates:
-      - 'updatecli/updatecli:{{ .Tag }}-amd64'
-      - 'updatecli/updatecli:{{ .Tag }}-arm64'
-  - name_template: 'ghcr.io/updatecli/updatecli:{{ .Tag }}'
+      - 'ghcr.io/cpanato/updatecli:{{ .Tag }}-amd64'
+      - 'ghcr.io/cpanato/updatecli:{{ .Tag }}-arm64'
+  # - name_template: 'updatecli/updatecli:latest'
+  #   image_templates:
+  #     - 'updatecli/updatecli:{{ .Tag }}-amd64'
+  #     - 'updatecli/updatecli:{{ .Tag }}-arm64'
+  - name_template: 'ghcr.io/cpanato/updatecli:latest'
     image_templates:
-      - 'ghcr.io/updatecli/updatecli:{{ .Tag }}-amd64'
-      - 'ghcr.io/updatecli/updatecli:{{ .Tag }}-arm64'
-  - name_template: 'updatecli/updatecli:latest'
-    image_templates:
-      - 'updatecli/updatecli:{{ .Tag }}-amd64'
-      - 'updatecli/updatecli:{{ .Tag }}-arm64'
-  - name_template: 'ghcr.io/updatecli/updatecli:latest'
-    image_templates:
-      - 'ghcr.io/updatecli/updatecli:{{ .Tag }}-amd64'
-      - 'ghcr.io/updatecli/updatecli:{{ .Tag }}-arm64'
+      - 'ghcr.io/cpanato/updatecli:{{ .Tag }}-amd64'
+      - 'ghcr.io/cpanato/updatecli:{{ .Tag }}-arm64'
 
 env:
   - GO111MODULE=on
